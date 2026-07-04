@@ -30,9 +30,11 @@ class Settings:
     DISCORD_CHANNEL_ID: str = os.getenv("DISCORD_CHANNEL_ID", "")
     DISCORD_API_BASE: str = "https://discord.com/api/v10"
 
-    ALLOWED_ORIGINS: list[str] = os.getenv(
-        "ALLOWED_ORIGINS", "http://localhost:3000"
-    ).split(",")
+    ALLOWED_ORIGINS: list[str] = [
+        origin.rstrip("/") for origin in os.getenv(
+            "ALLOWED_ORIGINS", "http://localhost:3000"
+        ).split(",")
+    ]
 
     CRAWLER_MAX_PAGES: int = int(os.getenv("CRAWLER_MAX_PAGES", "8"))
     CRAWLER_TIMEOUT_SECONDS: int = int(os.getenv("CRAWLER_TIMEOUT_SECONDS", "10"))
