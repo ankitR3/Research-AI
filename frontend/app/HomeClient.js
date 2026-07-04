@@ -20,7 +20,7 @@ import {
   Info
 } from "lucide-react";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const DEFAULT_MODELS = [
   { id: "nvidia/nemotron-3-super-120b-a12b:free", name: "Nvidia Nemotron 120B (Free)" },
