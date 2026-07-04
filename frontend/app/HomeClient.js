@@ -172,10 +172,6 @@ export default function HomeClient({ initialTab }) {
 
   const sendDiscordMessage = async () => {
     if (!reportId || !report) return;
-    if (!discordToken || !discordChannelId) {
-      setDiscordError("Discord Bot Token and Channel ID must be saved in the sidebar first.");
-      return;
-    }
 
     setSendingDiscord(true);
     setDiscordError("");
@@ -186,8 +182,8 @@ export default function HomeClient({ initialTab }) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          bot_token: discordToken,
-          channel_id: discordChannelId,
+          bot_token: discordToken || undefined,
+          channel_id: discordChannelId || undefined,
           applicant_name: applicantName || undefined,
           applicant_email: applicantEmail || undefined,
           company_name: report.company_name,

@@ -43,8 +43,8 @@ class DiscordConfigRequest(BaseModel):
 
 
 class DiscordSendRequest(BaseModel):
-    bot_token: str
-    channel_id: str
+    bot_token: Optional[str] = None
+    channel_id: Optional[str] = None
     applicant_name: Optional[str] = None
     applicant_email: Optional[str] = None
     company_name: str

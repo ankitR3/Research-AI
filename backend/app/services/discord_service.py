@@ -11,9 +11,14 @@ from app.config import settings
 
 
 class DiscordService:
-    def __init__(self, bot_token: str, channel_id: str):
-        self.bot_token = bot_token
-        self.channel_id = channel_id
+    def __init__(self, bot_token: str | None, channel_id: str | None):
+        self.bot_token = bot_token or settings.DISCORD_BOT_TOKEN
+        self.channel_id = channel_id or settings.DISCORD_CHANNEL_ID
+
+        if not self.bot_token or not self.channel_id:
+            raise ValueError(
+                "Discord Bot Token and Channel ID must be saved in the sidebar or configured in the server .env first."
+            )
 
     async def send_report(
         self,
