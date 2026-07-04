@@ -19,7 +19,7 @@ load_dotenv()
 class Settings:
     OPENROUTER_API_KEY: str = os.getenv("OPENROUTER_API_KEY", "")
     OPENROUTER_DEFAULT_MODEL: str = os.getenv(
-        "OPENROUTER_DEFAULT_MODEL", "anthropic/claude-3.5-sonnet"
+        "OPENROUTER_DEFAULT_MODEL", "nvidia/nemotron-3-super-120b-a12b:free"
     )
     OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
 
