@@ -35,10 +35,13 @@ from app.services.discord_service import DiscordService
 
 app = FastAPI(title="Relu Company Research Assistant API", version="1.0.0")
 
+# Wildcard * cannot be used with allow_credentials=True in CORS spec
+is_wildcard = "*" in settings.ALLOWED_ORIGINS
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=not is_wildcard,
     allow_methods=["*"],
     allow_headers=["*"],
 )
