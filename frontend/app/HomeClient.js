@@ -17,7 +17,9 @@ import {
   Compass,
   Cpu,
   RefreshCw,
-  Info
+  Info,
+  Menu,
+  X
 } from "lucide-react";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -36,6 +38,7 @@ const QUICK_CHIPS = ["stripe.com", "Tesla", "Microsoft", "OpenAI"];
 export default function HomeClient({ initialTab }) {
   // Sidebar config state
   const [activeTab, setActiveTab] = useState(initialTab || "API"); // "API" | "DISCORD"
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [openRouterKey, setOpenRouterKey] = useState("");
   const [serperKey, setSerperKey] = useState("");
   const [selectedModel, setSelectedModel] = useState("nvidia/nemotron-3-super-120b-a12b:free");
@@ -208,18 +211,39 @@ export default function HomeClient({ initialTab }) {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background bg-grid-pattern text-foreground font-sans">
       
+      {/* Backdrop overlay for mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden backdrop-blur-sm"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Left Sidebar Configurator */}
-      <aside className="w-80 h-full bg-card border-r border-border flex flex-col justify-between shrink-0">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-80 h-full bg-card border-r border-border flex flex-col justify-between shrink-0 transform transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
           <div>
             {/* Header */}
-            <div className="p-5 border-b border-border flex items-center gap-3">
-              <div className="h-9 w-9 bg-primary/10 rounded-lg border border-primary/20 flex items-center justify-center">
-                <Compass className="h-5 w-5 text-primary" />
+            <div className="p-5 border-b border-border flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 bg-primary/10 rounded-lg border border-primary/20 flex items-center justify-center">
+                  <Compass className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-sm leading-tight text-white tracking-wide">Research AI</h2>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold font-mono">Company Intelligence</p>
+                </div>
               </div>
-              <div>
-                <h2 className="font-bold text-sm leading-tight text-white tracking-wide">Research AI</h2>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold font-mono">Company Intelligence</p>
-              </div>
+              
+              {/* Mobile Close Button */}
+              <button 
+                onClick={() => setIsSidebarOpen(false)}
+                className="lg:hidden p-1.5 rounded-md hover:bg-accent border border-border text-muted-foreground hover:text-white transition-all-custom cursor-pointer"
+                aria-label="Close settings"
+              >
+                <X className="h-4 w-4" />
+              </button>
             </div>
 
             {/* Configuration Tabs */}
@@ -378,6 +402,25 @@ export default function HomeClient({ initialTab }) {
       {/* Main Panel Content Area */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
         
+        {/* Mobile Header */}
+        <div className="lg:hidden bg-card border-b border-border px-4 py-3 flex items-center justify-between shrink-0">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 bg-primary/10 rounded-lg border border-primary/20 flex items-center justify-center">
+              <Compass className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <span className="font-bold text-xs text-white tracking-wide">Research AI</span>
+            </div>
+          </div>
+          <button 
+            onClick={() => setIsSidebarOpen(true)}
+            className="p-1.5 rounded-md hover:bg-accent border border-border text-muted-foreground hover:text-white transition-all-custom cursor-pointer"
+            aria-label="Open settings"
+          >
+            <Menu className="h-4 w-4" />
+          </button>
+        </div>
+
         {/* API Warning/Notice Header */}
         {(!openRouterKey || !serperKey) && (
           <div className="bg-primary/5 border-b border-border/80 px-6 py-2 flex items-center gap-3 text-xs">
@@ -389,15 +432,15 @@ export default function HomeClient({ initialTab }) {
         )}
 
         {/* Scrollable Report Content View */}
-        <div className="flex-1 overflow-y-auto p-8 relative flex flex-col items-center">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8 relative flex flex-col items-center">
           
           {/* Default / Initial Greeting State */}
           {!loading && !report && !error && (
-            <div className="w-full max-w-2xl flex-grow flex flex-col justify-center items-center py-20 text-center select-none">
+            <div className="w-full max-w-2xl flex-grow flex flex-col justify-center items-center py-10 sm:py-20 text-center select-none">
               <div className="h-16 w-16 bg-primary/5 rounded-2xl border border-primary/20 flex items-center justify-center mb-6 shadow-sm">
                 <Compass className="h-8 w-8 text-primary" />
               </div>
-              <h1 className="text-4xl font-extrabold tracking-tight text-white mb-3">
+              <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
                 Know any company in minutes.
               </h1>
               <p className="text-sm text-muted-foreground max-w-lg mb-10 leading-relaxed">
@@ -485,7 +528,7 @@ export default function HomeClient({ initialTab }) {
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/80 pb-5">
                 <div>
                   <span className="text-[10px] text-primary uppercase font-bold tracking-wider font-mono">Company Profile Research</span>
-                  <h1 className="text-3xl font-extrabold text-white tracking-tight mt-0.5">{report.company_name}</h1>
+                  <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-0.5">{report.company_name}</h1>
                 </div>
                 
                 {/* Actions */}
@@ -673,7 +716,7 @@ export default function HomeClient({ initialTab }) {
         </div>
 
         {/* Bottom ChatGPT style input field bar */}
-        <div className="p-6 border-t border-border bg-background/90 backdrop-blur-md flex justify-center shrink-0">
+        <div className="p-4 sm:p-6 border-t border-border bg-background/90 backdrop-blur-md flex justify-center shrink-0">
           <form 
             onSubmit={(e) => {
               e.preventDefault();
